@@ -1,9 +1,15 @@
 import os
 import json
+import argparse
 
 
 def is_dir(path):
     return os.path.isdir(path)
+
+
+def print_json(obj):
+    json_repr = json.dumps(obj, sort_keys=True, indent=4)
+    print(json_repr)
 
 
 def load_dir(path):
@@ -33,8 +39,25 @@ def load_dir(path):
     return structure
 
 
-def main(path):
+def get_parser():
+    parser = argparse.ArgumentParser(
+        prog='jsonify-dir', description='JSON representation of file path')
+
+    parser.add_argument('path', metavar='PATH', type=str,
+                        help='the path to list')
+
+    return parser
+
+
+def main():
+    parser = get_parser()
+    args = parser.parse_args()
+
+    path = args.path
     structure = load_dir(path)
 
-    json_repr = json.dumps(structure, sort_keys=True, indent=4)
-    print(json_repr)
+    print_json(structure)
+
+
+if __name__ == '__main__':
+    main()
