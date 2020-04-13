@@ -1,5 +1,5 @@
 import unittest
-import src.jsonify as jsonify
+import jsonify.jsonify as jsonify
 
 
 class JsonifyTestCase(unittest.TestCase):
