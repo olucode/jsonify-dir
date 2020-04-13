@@ -1,5 +1,6 @@
 import os
 import json
+import yaml
 import argparse
 
 
@@ -11,9 +12,22 @@ def _is_file(path):
     return os.path.isfile(path)
 
 
-def _print_json(obj):
-    json_repr = json.dumps(obj, sort_keys=True, indent=4)
-    print(json_repr)
+def _format_json(obj):
+    return json.dumps(obj, sort_keys=True, indent=4)
+
+
+def _format_yaml(obj):
+    return yaml.dump(obj, indent=4)
+
+
+def _print(structure, output_format):
+    formats = {
+        'json': _format_json,
+        'yaml': _format_yaml,
+    }
+
+    output = formats[output_format]
+    print(output(structure))
 
 
 def load_dir(path):
@@ -48,7 +62,10 @@ def get_parser():
         prog='jsonify-dir', description='JSON representation of file path')
 
     parser.add_argument('path', metavar='PATH', type=str,
-                        help='the path to list')
+                        help='the file path')
+
+    parser.add_argument('-f', '--format', type=str, default='json',
+                        choices=['json', 'yaml'], help='The output format')
 
     return parser
 
@@ -58,9 +75,11 @@ def main():
     args = parser.parse_args()
 
     path = args.path
+    output_format = args.format
+
     structure = load_dir(path)
 
-    _print_json(structure)
+    _print(structure, output_format)
 
 
 if __name__ == '__main__':
